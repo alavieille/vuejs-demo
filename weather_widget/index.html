@@ -1,0 +1,66 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Blog Template for</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div id="weather">
+        <input type="text" v-model="city">
+        <p>{{ city }}</p>
+        <p>{{temperature}}</p>
+        <p>{{description}}</p>
+    </div>
+
+
+<script src="vue.min.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    new Vue({
+        el: "#weather",
+        data: {
+            city: "Grenoble",
+            temperature: null,
+            description: null
+        },
+        watch: {
+          city: function () {
+            this.update();
+          }
+        },
+        methods: {
+          update: function () {
+              let url = 'http://api.openweathermap.org/data/2.5/weather';
+              let options = {
+                  appid: 'f409c263634c095ca7d98b3a966bb43c',
+                  q: this.city
+              };
+
+              let vue = this;
+              axios.get(url, {params: options})
+                      .then(function (response) {
+                          vue.temperature = response.data.main.temp;
+                          vue.description = response.data.weather[0].description;
+                          console.log(response);
+                      })
+                      .catch(function (error) {
+                          console.log(error);
+                      });
+          }
+        },
+        mounted: function() {
+            this.update();
+        }
+    })
+</script>
+
+</body>
+</html>
